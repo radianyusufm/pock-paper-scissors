@@ -1,3 +1,62 @@
+const rock = document.getElementById('rock')
+const paper = document.getElementById('paper')
+const scissors = document.getElementById('scissors')
+
+let totalGame = 0
+let winPlayer = 0
+let winComputer = 0
+let draw = 0
+
+rock.addEventListener('click', () =>  playRound('rock'))
+paper.addEventListener('click', () => playRound('paper'))
+scissors.addEventListener('click', () => playRound('scissors'))
+
+
+function playRound(player){
+    
+    let computer = randomSelection().toLowerCase()
+    let resultMessage = ''
+    
+    totalGame += 1
+    
+    if (player == computer ) {
+        draw += 1
+        resultMessage = 'Draw! ' + player + " and " + computer
+    } else if (
+        (player === 'rock' && computer === 'scissors') ||
+        (player === 'paper' && computer === 'rock') ||
+        (player === 'scissors' && computer === 'paper')
+        ) {
+
+        winPlayer += 1
+        countScore(winPlayer, 'player')
+        resultMessage =  "You Won! " + player +" beats " + computer
+        
+    } else {
+        winComputer += 1
+        countScore(winComputer, 'computer')
+        resultMessage = "You Lose! " + computer +" beats " + player
+    } 
+
+    showtScore()
+    resultGame(resultMessage)
+}
+
+
+function resultGame(str){
+    
+    document.querySelector('.result').innerHTML = ''
+
+    let text = document.createTextNode(str)
+    let divResult = document.querySelector('.result')
+    divResult.appendChild(text)
+
+    console.log("Total Game : " + totalGame)
+    console.log("Win Player : " + winPlayer)
+    console.log("Win Computer : " + winComputer)
+}
+
+
 function randomSelection(){
     number = Math.floor(Math.random() * 3);
 
@@ -10,36 +69,34 @@ function randomSelection(){
     }
 }
 
-function validateInputUser(s){
-    if (s.toLowerCase() !== 'rock' && s.toLowerCase() !== 'paper' && s.toLowerCase() !== 'scissors') {
-        return "Invalid Input"
-    } else {
-        return s
+
+
+
+function countScore(totalScore, playerName){
+    document.querySelector('.winner').innerHTML = ''
+
+    if (totalScore == 5 ){
+        
+        let str = "The Winner is " + playerName
+        let text = document.createTextNode(str)
+        let divResult = document.querySelector('.winner')
+        divResult.appendChild(text)
+        
+        resetScore()
     }
 }
 
 
-function playRound(computer, player){
-    if (player == computer ) {
-        return 'Draw! ' + player + " and " + computer
-    } 
-    
-    if (
-        (player === 'rock' && computer === 'scissors') ||
-        (player === 'paper' && computer === 'rock') ||
-        (player === 'scissors' && computer === 'paper')
-        ) {
-        return "You Won! " + player +" beats " + computer
-    } else {
-        return "You Lose! " + computer +" beats " + player
-    } 
+function showtScore() {
+    document.querySelector('.total_game').innerHTML = totalGame
+    document.querySelector('.player_win').innerHTML = winPlayer
+    document.querySelector('.computer_win').innerHTML = winComputer
+    document.querySelector('.draw').innerHTML = draw
 }
 
-
-
-for (let i = 0; i < 5; i++) {
-    const computerSelection = randomSelection().toLowerCase()
-    const playerSelection = validateInputUser(prompt())
-
-    console.log(playRound(computerSelection, playerSelection)) 
+function resetScore(){
+    totalGame = 0
+    winPlayer = 0
+    winComputer = 0
+    draw = 0
 }
